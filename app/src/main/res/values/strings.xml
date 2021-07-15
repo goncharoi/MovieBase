@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MovieBase</string>
+    <string name="home_menu">Home</string>
+    <string name="favorites_menu">Favorites</string>
+    <string name="ratings_menu">Ratings</string>
+    <string name="search_menu">Поиск</string>
+</resources>

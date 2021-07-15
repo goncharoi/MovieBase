@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_home"
+        android:icon="@drawable/ic_baseline_home_24"
+        android:title="@string/home_menu" />
+    <item
+        android:id="@+id/menu_favorites"
+        android:icon="@drawable/ic_baseline_favorite_border_24"
+        android:title="@string/favorites_menu" />
+
+    <item
+        android:id="@+id/menu_ratings"
+        android:icon="@drawable/ic_baseline_insert_chart_outlined_24"
+        android:title="@string/ratings_menu" />
+</menu>
