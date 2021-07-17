@@ -4,29 +4,43 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ru.set.moviebase.ui.main.model.Model
+import ru.set.moviebase.ui.main.model.MovieEntity
 import ru.set.moviebase.ui.main.model.Movies
 import ru.set.moviebase.ui.main.view.MoviesAdapter
 
 
 class ViewModel(
-    private val liveDataToObserve: MutableLiveData<Movies> = MutableLiveData(),
+    private val moviesListToObserve: MutableLiveData<Movies> = MutableLiveData(),
+    private val chosenMovieToObserve: MutableLiveData<MovieEntity> = MutableLiveData(),
     private val model: Model = Model()
 ) : ViewModel(), MoviesAdapter.OnItemClickListener {
 
-    fun getData(): LiveData<Movies> {
-        return liveDataToObserve
+    fun getMoviesList(): LiveData<Movies> {
+        return moviesListToObserve
+    }
+
+    fun getChosenMovie(): LiveData<MovieEntity> {
+        return chosenMovieToObserve
     }
 
     fun loadData() {
         model.loadData(object : OnMoviesChangedListener {
             override fun onLoad(movies: Movies?) { //асинхронная загрузка
-                liveDataToObserve.postValue(movies)
+                moviesListToObserve.postValue(movies)
             }
         })
     }
 
     fun loadDataLocal() {
-         liveDataToObserve.value = model.loadDataLocal()
+         moviesListToObserve.value = model.loadDataLocal()
+    }
+
+    override fun chooseMovie(movieGUID: String){
+        chosenMovieToObserve.value = moviesListToObserve.value?.filter { it.GUID == movieGUID }?.get(0)
+    }
+
+    fun unchooseMovie() {
+        chosenMovieToObserve.value = null
     }
 
     interface OnMoviesChangedListener {
@@ -34,13 +48,13 @@ class ViewModel(
     }
 
     override fun changeMovieFavoritesStatus(movieGUID: String) {
-        var movies : Movies? = liveDataToObserve.value
-        movies?.filter { it.GUID == movieGUID }?.get(0)?.let { it.IsFavorite = !it.IsFavorite }
-        liveDataToObserve.value = movies
+        val movies : Movies? = moviesListToObserve.value
+        movies?.filter { it.GUID == movieGUID }?.get(0)?.let { it.isFavorite = !it.isFavorite }
+        moviesListToObserve.value = movies
     }
     override fun setMovieRating(movieGUID: String, rating: Float) {
-        var movies : Movies? = liveDataToObserve.value
-        movies?.filter { it.GUID == movieGUID }?.get(0)?.let { it.Rating = rating }
-        liveDataToObserve.value = movies
+        val movies : Movies? = moviesListToObserve.value
+        movies?.filter { it.GUID == movieGUID }?.get(0)?.let { it.rating = rating }
+        moviesListToObserve.value = movies
     }
 }

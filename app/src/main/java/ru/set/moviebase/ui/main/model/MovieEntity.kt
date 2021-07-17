@@ -6,8 +6,10 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class MovieEntity(
     val GUID: String,
-    val Title: String,
-    val Year: Int,
-    var Rating: Float,
-    var IsFavorite: Boolean
+    val title: String,
+    val originTitle: String,
+    val description: String,
+    val year: Int,
+    var rating: Float,
+    var isFavorite: Boolean
 ) : Parcelable

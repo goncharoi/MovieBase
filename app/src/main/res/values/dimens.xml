@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="card_layout_padding">16dp</dimen>
-    <dimen name="movie_card_image_height">300dp</dimen>
+    <dimen name="movie_card_image_height">150dp</dimen>
     <dimen name="movie_card_text_size">22sp</dimen>
     <dimen name="movie_card_width">150dp</dimen>
+    <dimen name="movie_title_size">26sp</dimen>
+    <dimen name="movie_origin_title_size">16sp</dimen>
+    <dimen name="movie_description_size">12sp</dimen>
 </resources>
