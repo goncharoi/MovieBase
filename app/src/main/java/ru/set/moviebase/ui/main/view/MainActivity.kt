@@ -1,11 +1,11 @@
-package ru.set.moviebase
+package ru.set.moviebase.ui.main.view
 
 import android.os.Bundle
 import android.view.Menu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import ru.set.moviebase.R
 import ru.set.moviebase.databinding.MainActivityBinding
-import ru.set.moviebase.ui.main.view.MoviesFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -44,7 +44,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-        (menu?.findItem(R.id.menu_search)?.actionView as SearchView).setOnQueryTextListener(OnQueryTextListener())
+        (menu?.findItem(R.id.menu_search)?.actionView as SearchView).setOnQueryTextListener(
+            OnQueryTextListener()
+        )
         return true
     }
     private class OnQueryTextListener : SearchView.OnQueryTextListener {
