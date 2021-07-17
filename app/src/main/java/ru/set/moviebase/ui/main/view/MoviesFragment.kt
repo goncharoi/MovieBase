@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.set.moviebase.databinding.NowPlayingFragmentBinding
+import ru.set.moviebase.databinding.MainFragmentBinding
 import ru.set.moviebase.ui.main.model.Movies
 import ru.set.moviebase.ui.main.viewmodel.ViewModel
 
@@ -16,8 +16,9 @@ import ru.set.moviebase.ui.main.viewmodel.ViewModel
 class MoviesFragment : Fragment() {
 
     private lateinit var viewModel: ViewModel
-    private var binding: NowPlayingFragmentBinding? = null
-    private lateinit var moviesAdapter: MoviesAdapter
+    private var binding: MainFragmentBinding? = null
+    private lateinit var nowPlayingAdapter: MoviesAdapter
+    private lateinit var upcomingAdapter: MoviesAdapter
 
     companion object {
         fun newInstance() = MoviesFragment()
@@ -27,34 +28,45 @@ class MoviesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = NowPlayingFragmentBinding.inflate(inflater, container, false)
+        binding = MainFragmentBinding.inflate(inflater, container, false)
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
-        viewModel.getData().observe(viewLifecycleOwner, { renderData(it) })
-        setupRecyclerView(view)
+        viewModel.getMoviesList().observe(viewLifecycleOwner, { renderData(it) })
+        setupView()
         //viewModel.loadData()
         viewModel.loadDataLocal()
     }
 
-    private fun setupRecyclerView(view: View) {
-        val recyclerView: RecyclerView = binding!!.nowPlayingRecyclerView
-        recyclerView.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        setupAdapter()
-        recyclerView.adapter = moviesAdapter
+    private fun setupView(){
+        setupNowPlayingAdapter()
+        setupMoviesRecyclerView(binding!!.nowPlayingRecyclerView,nowPlayingAdapter)
+        setupUpcomingAdapter()
+        setupMoviesRecyclerView(binding!!.upcomingRecyclerView,upcomingAdapter)
     }
 
-    private fun setupAdapter() {
-        moviesAdapter = MoviesAdapter()
-        moviesAdapter.setOnItemClickListener(viewModel)
+    private fun setupMoviesRecyclerView(recyclerView: RecyclerView, adapter: MoviesAdapter) {
+        val recyclerView: RecyclerView = recyclerView
+        recyclerView.layoutManager =
+            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.adapter = adapter
+    }
+
+    private fun setupNowPlayingAdapter() {
+        nowPlayingAdapter = MoviesAdapter()
+        nowPlayingAdapter.setOnItemClickListener(viewModel)
+    }
+    private fun setupUpcomingAdapter() {
+        upcomingAdapter = MoviesAdapter()
+        upcomingAdapter.setOnItemClickListener(viewModel)
     }
 
     private fun renderData(movies: Movies) {
-        moviesAdapter.submitList(movies)
+        nowPlayingAdapter.submitList(movies)
+        upcomingAdapter.submitList(movies)
     }
 
     override fun onDestroyView() {
