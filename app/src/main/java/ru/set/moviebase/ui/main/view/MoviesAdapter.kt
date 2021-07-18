@@ -9,7 +9,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.set.moviebase.R
 import ru.set.moviebase.databinding.MovieCardBinding
 import ru.set.moviebase.ui.main.model.MovieEntity
 
@@ -65,7 +64,10 @@ class MoviesAdapter :
         }
 
         init {
-            ratingBar.setOnClickListener { movie?.let { it1 -> onItemClickListener?.setMovieRating(it1.GUID,ratingBar.rating) } }
+            ratingBar.onRatingBarChangeListener =
+                RatingBar.OnRatingBarChangeListener { _, rating, fromUser ->
+                    if (fromUser) onItemClickListener?.setMovieRating(movie!!.GUID, rating)
+                }
             image.setOnClickListener { movie?.let { it1 -> onItemClickListener?.chooseMovie(it1.GUID) } }
             titleTv.setOnClickListener { movie?.let { it1 -> onItemClickListener?.chooseMovie(it1.GUID) } }
         }

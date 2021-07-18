@@ -12,7 +12,6 @@ import ru.set.moviebase.databinding.MainFragmentBinding
 import ru.set.moviebase.ui.main.model.Movies
 import ru.set.moviebase.ui.main.viewmodel.ViewModel
 
-
 class MoviesFragment : Fragment() {
 
     private lateinit var viewModel: ViewModel

@@ -8,7 +8,6 @@ import ru.set.moviebase.ui.main.model.MovieEntity
 import ru.set.moviebase.ui.main.model.Movies
 import ru.set.moviebase.ui.main.view.MoviesAdapter
 
-
 class ViewModel(
     private val moviesListToObserve: MutableLiveData<Movies> = MutableLiveData(),
     private val chosenMovieToObserve: MutableLiveData<MovieEntity> = MutableLiveData(),
@@ -49,17 +48,26 @@ class ViewModel(
     }
 
     override fun changeMovieFavoritesStatus(movieGUID: String) {
-        val movies: Movies? = moviesListToObserve.value
-        movies?.filter { it.GUID == movieGUID }?.get(0)?.let { it.isFavorite = !it.isFavorite }
-        moviesListToObserve.value = movies
+        changeMovie(movieGUID, changeFavoritesStatus = true)
     }
 
     override fun setMovieRating(movieGUID: String, rating: Float) {
+        changeMovie(movieGUID, rating, changeRating = true)
+    }
+
+    private fun changeMovie(
+        movieGUID: String,
+        rating: Float = 0.0f,
+        changeRating: Boolean = false,
+        changeFavoritesStatus: Boolean = false
+    ) {
         var movies: Movies = listOf()
         moviesListToObserve.value?.forEach {
             movies = when {
                 it.GUID != movieGUID -> movies.plus(it)
-                else -> movies.plus(it.copy(rating = rating))
+                changeRating -> movies.plus(it.copy(rating = rating))
+                changeFavoritesStatus -> movies.plus(it.copy(isFavorite = !it.isFavorite))
+                else -> movies.plus(it)
             }
         }
         moviesListToObserve.value = movies

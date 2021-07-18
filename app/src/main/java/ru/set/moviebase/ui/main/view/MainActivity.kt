@@ -2,13 +2,16 @@ package ru.set.moviebase.ui.main.view
 
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.navigation.NavigationBarView
 import ru.set.moviebase.R
 import ru.set.moviebase.databinding.MainActivityBinding
 import ru.set.moviebase.ui.main.model.MovieEntity
 import ru.set.moviebase.ui.main.viewmodel.ViewModel
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: ViewModel by lazy { ViewModelProvider(this).get(ViewModel::class.java) }
@@ -30,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private fun setElements(savedInstanceState: Bundle?) {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar);
+        binding.navigation.setOnItemSelectedListener(onItemSelectedListener)
         setMoviesFragment(savedInstanceState)
     }
 
@@ -69,4 +73,15 @@ class MainActivity : AppCompatActivity() {
             return true
         }
     }
+
+    private val onItemSelectedListener =
+        NavigationBarView.OnItemSelectedListener { item: MenuItem ->
+            when (item.itemId) {
+                R.id.menu_home -> binding.root.showTextById(R.string.home_menu)
+                R.id.menu_favorites -> binding.root.showTextById(R.string.favorites_menu)
+                R.id.menu_ratings -> binding.root.showTextById(R.string.ratings_menu)
+                else -> return@OnItemSelectedListener false
+            }
+            return@OnItemSelectedListener true
+        }
 }
