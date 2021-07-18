@@ -25,7 +25,8 @@ class MoviesFragment : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = MainFragmentBinding.inflate(inflater, container, false)
@@ -49,19 +50,18 @@ class MoviesFragment : Fragment() {
     }
 
     private fun setupMoviesRecyclerView(recyclerView: RecyclerView, adapter: MoviesAdapter) {
-        val recyclerView: RecyclerView = recyclerView
-        recyclerView.layoutManager =
-            LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
-        recyclerView.adapter = adapter
+        with (recyclerView) {
+            this.layoutManager =
+                LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            this.adapter = adapter
+        }
     }
 
     private fun setupNowPlayingAdapter() {
-        nowPlayingAdapter = MoviesAdapter()
-        nowPlayingAdapter.setOnItemClickListener(viewModel)
+        nowPlayingAdapter = MoviesAdapter().apply { setOnItemClickListener(viewModel) }
     }
     private fun setupUpcomingAdapter() {
-        upcomingAdapter = MoviesAdapter()
-        upcomingAdapter.setOnItemClickListener(viewModel)
+        upcomingAdapter = MoviesAdapter().apply { setOnItemClickListener(viewModel) }
     }
 
     private fun renderData(movies: Movies) {

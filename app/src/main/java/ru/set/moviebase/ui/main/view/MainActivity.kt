@@ -11,19 +11,13 @@ import ru.set.moviebase.ui.main.model.MovieEntity
 import ru.set.moviebase.ui.main.viewmodel.ViewModel
 
 class MainActivity : AppCompatActivity() {
-    private lateinit var viewModel: ViewModel
-    private lateinit var binding: MainActivityBinding
+    private val viewModel: ViewModel by lazy { ViewModelProvider(this).get(ViewModel::class.java) }
+    private val binding: MainActivityBinding by lazy { MainActivityBinding.inflate(layoutInflater) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = MainActivityBinding.inflate(layoutInflater)
-        setViewModel()
+        viewModel.getChosenMovie().observe(this) { changeFragment(it) }
         setElements(savedInstanceState)
-    }
-
-    private fun setViewModel() {
-        viewModel = ViewModelProvider(this).get(ViewModel::class.java)
-        viewModel.getChosenMovie().observe(this, { changeFragment(it) })
     }
 
     private fun changeFragment(movie: MovieEntity?) {

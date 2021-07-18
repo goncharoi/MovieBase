@@ -32,11 +32,12 @@ class ViewModel(
     }
 
     fun loadDataLocal() {
-         moviesListToObserve.value = model.loadDataLocal()
+        moviesListToObserve.value = model.loadDataLocal()
     }
 
-    override fun chooseMovie(movieGUID: String){
-        chosenMovieToObserve.value = moviesListToObserve.value?.filter { it.GUID == movieGUID }?.get(0)
+    override fun chooseMovie(movieGUID: String) {
+        chosenMovieToObserve.value =
+            moviesListToObserve.value?.filter { it.GUID == movieGUID }?.get(0)
     }
 
     fun unchooseMovie() {
@@ -48,13 +49,19 @@ class ViewModel(
     }
 
     override fun changeMovieFavoritesStatus(movieGUID: String) {
-        val movies : Movies? = moviesListToObserve.value
+        val movies: Movies? = moviesListToObserve.value
         movies?.filter { it.GUID == movieGUID }?.get(0)?.let { it.isFavorite = !it.isFavorite }
         moviesListToObserve.value = movies
     }
+
     override fun setMovieRating(movieGUID: String, rating: Float) {
-        val movies : Movies? = moviesListToObserve.value
-        movies?.filter { it.GUID == movieGUID }?.get(0)?.let { it.rating = rating }
+        var movies: Movies = listOf()
+        moviesListToObserve.value?.forEach {
+            movies = when {
+                it.GUID != movieGUID -> movies.plus(it)
+                else -> movies.plus(it.copy(rating = rating))
+            }
+        }
         moviesListToObserve.value = movies
     }
 }
