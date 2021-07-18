@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/movie_card_text_size"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/movie_card_image" />
+            app:layout_constraintTop_toBottomOf="@+id/movie_card_image" />
 
         <TextView
             android:id="@+id/movie_card_year"
@@ -41,9 +41,10 @@
             android:id="@+id/movie_card_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:max="10"
             android:numStars="1"
-            android:rating="0"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:stepSize="0.1"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
