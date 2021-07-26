@@ -38,9 +38,9 @@ class ChoosenMovieFragment : Fragment()  {
     }
     private fun setupView(movie: MovieEntity) {
         binding!!.movieTitle.text = movie.title
-        binding!!.movieOriginTitle.text = movie.originTitle
-        binding!!.movieDescription.text = movie.description
-        binding!!.movieYear.text = movie.year.toString()
-        binding!!.movieRating.rating = movie.rating
+        binding!!.movieOriginTitle.text = movie.original_title
+        binding!!.movieDescription.text = movie.overview
+        binding!!.movieYear.text = movie.release_date
+        binding!!.movieRating.rating = movie.vote_average
     }
 }

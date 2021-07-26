@@ -1,27 +1,66 @@
 package ru.set.moviebase.ui.main.model
 
+import android.os.Build
+import androidx.annotation.RequiresApi
+import com.google.gson.Gson
+import com.google.gson.JsonSyntaxException
+import ru.set.moviebase.R
 import ru.set.moviebase.ui.main.viewmodel.ViewModel
-import java.util.*
-import kotlin.collections.ArrayList
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.MalformedURLException
+import java.net.URL
+import java.util.stream.Collectors
+import javax.net.ssl.HttpsURLConnection
+
+private const val API_KEY = "665b3b4cab72e973bf2c0bd2c0311051"
 
 class Model {
+
+    @RequiresApi(Build.VERSION_CODES.N)
     fun loadData(listener: ViewModel.OnMoviesChangedListener) {
-        // TODO выборка данных
-        listener.onLoad(ArrayList())
+        loadDataOfType("now_playing", listener, listener::onNowPlayingMoviesLoad)
+        loadDataOfType("upcoming", listener, listener::onUpcomingMoviesLoad)
     }
 
-    fun loadDataLocal(): Movies {
-        return listOf(
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 1", "Movie 1","Какое-то очень длинное описание очень скучного фильма", 1985, 0.9f, true),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 2","Movie 2","Какое-то очень длинное описание очень скучного фильма", 1984, 0.2f, false),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 3","Movie 3","Какое-то очень длинное описание очень скучного фильма", 1956, 0.9f, false),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 4","Movie 4","Какое-то очень длинное описание очень скучного фильма",1999, 0.5f, false),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 5","Movie 1","Какое-то очень длинное описание очень скучного фильма", 2001, 0.6f, true),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 6","Movie 2","Какое-то очень длинное описание очень скучного фильма", 2012, 0.1f, false),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 7","Movie 3","Какое-то очень длинное описание очень скучного фильма", 2005, 0.6f, true),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 8","Movie 4","Какое-то очень длинное описание очень скучного фильма", 2009, 0.5f, true),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 9","Movie 9","Какое-то очень длинное описание очень скучного фильма", 1985, 0.8f, false),
-            MovieEntity(UUID.randomUUID().toString(),"Фильм 10","Movie 10","Какое-то очень длинное описание очень скучного фильма", 2021, 0.9f, false)
-        )
+    @RequiresApi(Build.VERSION_CODES.N)
+    fun loadDataOfType(
+        type: String,
+        listener: ViewModel.OnMoviesChangedListener,
+        onLoad: (movies: Movies?) -> Unit
+    ) {
+        try {
+            val uri =
+                URL("https://api.themoviedb.org/3/movie/${type}?api_key=${API_KEY}")
+            Thread {
+                lateinit var urlConnection: HttpsURLConnection
+                try {
+                    urlConnection = uri.openConnection() as HttpsURLConnection
+                    urlConnection.requestMethod = "GET"
+                    urlConnection.readTimeout = 10000
+                    val bufferedReader =
+                        BufferedReader(InputStreamReader(urlConnection.inputStream))
+                    try {
+                        onLoad(parseJsonToMovies(bufferedReader))
+                    } catch (e: JsonSyntaxException) {
+                        listener.onError(R.string.fail_parsing_message)
+                    }
+                } catch (e: Exception) {
+                    listener.onError(R.string.fail_connection_message)
+                } finally {
+                    urlConnection.disconnect()
+                }
+            }.start()
+        } catch (e: MalformedURLException) {
+            listener.onError(R.string.fail_URI_message)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private fun parseJsonToMovies(reader: BufferedReader): Movies {
+        return Gson().fromJson(
+            reader.lines().collect(Collectors.joining("\n")),
+            NowPlayingJson::class.java
+        ).results
     }
 }

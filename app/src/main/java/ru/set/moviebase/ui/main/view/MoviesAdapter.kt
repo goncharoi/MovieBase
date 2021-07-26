@@ -19,9 +19,9 @@ class MoviesAdapter :
     private var onItemClickListener: OnItemClickListener? = null
 
     interface OnItemClickListener {
-        fun changeMovieFavoritesStatus(movieGUID: String)
-        fun setMovieRating(movieGUID: String, rating: Float)
-        fun chooseMovie(movieGUID: String)
+        fun changeMovieFavoritesStatus(movieGUID: Int)
+        fun setMovieRating(movieGUID: Int, rating: Float)
+        fun chooseMovie(movieGUID: Int)
     }
 
     fun setOnItemClickListener(onItemClickListener: OnItemClickListener?) {
@@ -39,13 +39,13 @@ class MoviesAdapter :
 
     class MovieDiff : DiffUtil.ItemCallback<MovieEntity?>() {
         override fun areItemsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean =
-            oldItem.GUID == newItem.GUID
+            oldItem.id == newItem.id
 
         override fun areContentsTheSame(oldItem: MovieEntity, newItem: MovieEntity): Boolean =
             (oldItem.title == newItem.title
-                    && oldItem.year == newItem.year
+                    && oldItem.release_date == newItem.release_date
                     && oldItem.isFavorite == newItem.isFavorite
-                    && oldItem.rating == newItem.rating)
+                    && oldItem.vote_average == newItem.vote_average)
     }
 
     inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -59,17 +59,17 @@ class MoviesAdapter :
         fun bind(movie: MovieEntity) {
             this.movie = movie
             titleTv.text = movie.title
-            yearTv.text = movie.year.toString()
-            ratingBar.rating = movie.rating
+            yearTv.text = movie.release_date
+            ratingBar.rating = movie.vote_average / 10
         }
 
         init {
             ratingBar.onRatingBarChangeListener =
                 RatingBar.OnRatingBarChangeListener { _, rating, fromUser ->
-                    if (fromUser) onItemClickListener?.setMovieRating(movie!!.GUID, rating)
+                    if (fromUser) onItemClickListener?.setMovieRating(movie!!.id, rating * 10)
                 }
-            image.setOnClickListener { movie?.let { it1 -> onItemClickListener?.chooseMovie(it1.GUID) } }
-            titleTv.setOnClickListener { movie?.let { it1 -> onItemClickListener?.chooseMovie(it1.GUID) } }
+            image.setOnClickListener { movie?.let { it1 -> onItemClickListener?.chooseMovie(it1.id) } }
+            titleTv.setOnClickListener { movie?.let { it1 -> onItemClickListener?.chooseMovie(it1.id) } }
         }
     }
 }

@@ -1,15 +1,16 @@
 package ru.set.moviebase.ui.main.view
 
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import ru.set.moviebase.databinding.MainFragmentBinding
-import ru.set.moviebase.ui.main.model.Movies
 import ru.set.moviebase.ui.main.viewmodel.ViewModel
 
 class MoviesFragment : Fragment() {
@@ -32,13 +33,14 @@ class MoviesFragment : Fragment() {
         return binding!!.root
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(requireActivity()).get(ViewModel::class.java)
-        viewModel.getMoviesList().observe(viewLifecycleOwner, { renderData(it) })
+        viewModel.getNowPlayingMovies().observe(viewLifecycleOwner, { nowPlayingAdapter.submitList(it) })
+        viewModel.getUpcomingMovies().observe(viewLifecycleOwner, { upcomingAdapter.submitList(it) })
         setupView()
-        //viewModel.loadData()
-        viewModel.loadDataLocal()
+        viewModel.loadData()
     }
 
     private fun setupView(){
@@ -61,11 +63,6 @@ class MoviesFragment : Fragment() {
     }
     private fun setupUpcomingAdapter() {
         upcomingAdapter = MoviesAdapter().apply { setOnItemClickListener(viewModel) }
-    }
-
-    private fun renderData(movies: Movies) {
-        nowPlayingAdapter.submitList(movies)
-        upcomingAdapter.submitList(movies)
     }
 
     override fun onDestroyView() {

@@ -4,4 +4,9 @@
     <string name="favorites_menu">Favorites</string>
     <string name="ratings_menu">Ratings</string>
     <string name="search_menu">Поиск</string>
+    <string name="fail_connection_message">Fail connection</string>
+    <string name="fail_parsing_message">Fail Json parsing</string>
+    <string name="fail_URI_message">Fail URI</string>
+    <string name="now_playing_title">Now playing</string>
+    <string name="upcoming_title">Upcoming</string>
 </resources>

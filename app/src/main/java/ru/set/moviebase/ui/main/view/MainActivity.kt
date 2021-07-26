@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getChosenMovie().observe(this) { changeFragment(it) }
+        viewModel.getErrorMessage().observe(this) { binding.root.showTextById(it) }
         setElements(savedInstanceState)
     }
 
