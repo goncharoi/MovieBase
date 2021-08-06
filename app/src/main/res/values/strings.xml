@@ -9,4 +9,6 @@
     <string name="fail_URI_message">Fail URI</string>
     <string name="now_playing_title">Now playing</string>
     <string name="upcoming_title">Upcoming</string>
+    <string name="no_connection">Соединение прервано</string>
+    <string name="unknown_error">Неизвестная ошибка получения данных</string>
 </resources>

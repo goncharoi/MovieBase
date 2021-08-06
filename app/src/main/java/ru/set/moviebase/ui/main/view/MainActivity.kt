@@ -1,5 +1,7 @@
 package ru.set.moviebase.ui.main.view
 
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,18 +12,26 @@ import com.google.android.material.navigation.NavigationBarView
 import ru.set.moviebase.R
 import ru.set.moviebase.databinding.MainActivityBinding
 import ru.set.moviebase.ui.main.model.MovieEntity
+import ru.set.moviebase.ui.main.viewmodel.MainBroadcastReceiver
 import ru.set.moviebase.ui.main.viewmodel.ViewModel
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: ViewModel by lazy { ViewModelProvider(this).get(ViewModel::class.java) }
     private val binding: MainActivityBinding by lazy { MainActivityBinding.inflate(layoutInflater) }
+    private val receiver = MainBroadcastReceiver()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getChosenMovie().observe(this) { changeFragment(it) }
         viewModel.getErrorMessage().observe(this) { binding.root.showTextById(it) }
         setElements(savedInstanceState)
+        registerReceiver(receiver, IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION))
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
     }
 
     private fun changeFragment(movie: MovieEntity?) {

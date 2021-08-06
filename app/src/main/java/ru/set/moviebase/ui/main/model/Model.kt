@@ -5,6 +5,8 @@ import androidx.annotation.RequiresApi
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import ru.set.moviebase.R
+import ru.set.moviebase.ui.main.viewmodel.NOW_PLAYING_REQUEST_TYPE
+import ru.set.moviebase.ui.main.viewmodel.UPCOMING_REQUEST_TYPE
 import ru.set.moviebase.ui.main.viewmodel.ViewModel
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -19,8 +21,8 @@ class Model {
 
     @RequiresApi(Build.VERSION_CODES.N)
     fun loadData(listener: ViewModel.OnMoviesChangedListener) {
-        loadDataOfType("now_playing", listener, listener::onNowPlayingMoviesLoad)
-        loadDataOfType("upcoming", listener, listener::onUpcomingMoviesLoad)
+        loadDataOfType(NOW_PLAYING_REQUEST_TYPE, listener, listener::onNowPlayingMoviesLoad)
+        loadDataOfType(UPCOMING_REQUEST_TYPE, listener, listener::onUpcomingMoviesLoad)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
